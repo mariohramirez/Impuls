@@ -2,13 +2,11 @@ package com.impuls.user_service.model;
 
 public enum RoleName {
 
-    ROLE_ADMIN,
+    ADMIN,
 
-    ROLE_REMPRENDEDOR,
+    EMPRENDEDOR,
 
-    ROLE_ADMINISTRADOR,
+    EDITOR,
 
-    ROLE_EDITOR,
-
-    ROLE_USUARIO
+    USUARIO
 }

@@ -1,4 +1,4 @@
-package com.impuls.user_service.config;
+package com.impuls.user_service.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -10,14 +10,12 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.crypto.SecretKey;
 import java.io.IOException;
-import java.util.List;
 
 public class JwtTokenValidator extends OncePerRequestFilter {
     @Override
@@ -37,10 +35,27 @@ public class JwtTokenValidator extends OncePerRequestFilter {
                         .build()
                         .parseSignedClaims(jwt)
                         .getPayload();
+
+                //Extrae todos los claims del token
                 String email = String.valueOf(claims.get("email"));
+                Long userId = claims.get("userId", Long.class);
+                String uuid = claims.get("uuid", String.class);
                 String authorities = String.valueOf(claims.get("authorities"));
-                List<GrantedAuthority> auth = AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
-                Authentication authentication = new UsernamePasswordAuthenticationToken(email, null, auth);
+
+                CustomUserPrincipal principal = new CustomUserPrincipal(
+                        userId,
+                        uuid,
+                        email,
+                        AuthorityUtils.commaSeparatedStringToAuthorityList(authorities)
+                );
+
+               //List<GrantedAuthority> auth = AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
+                //Authentication authentication = new UsernamePasswordAuthenticationToken(email, null, auth);
+                Authentication authentication = new UsernamePasswordAuthenticationToken(
+                        principal,
+                        null,
+                        principal.getAuthorities()
+                );
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
             catch (Exception e) {

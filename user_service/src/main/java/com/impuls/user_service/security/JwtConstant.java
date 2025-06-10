@@ -1,4 +1,4 @@
-package com.impuls.user_service.config;
+package com.impuls.user_service.security;
 
 public class JwtConstant {
 

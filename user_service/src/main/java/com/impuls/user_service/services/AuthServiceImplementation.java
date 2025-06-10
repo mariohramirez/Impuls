@@ -1,11 +1,10 @@
 package com.impuls.user_service.services;
 
-import com.impuls.user_service.config.JwtProvider;
+import com.impuls.user_service.security.JwtProvider;
 import com.impuls.user_service.model.*;
 import com.impuls.user_service.model.gateway.*;
 import com.impuls.user_service.services.interfaces.AddressService;
 import com.impuls.user_service.services.interfaces.AuthService;
-import com.impuls.user_service.services.interfaces.SocialNetworkService;
 import com.impuls.user_service.services.request.*;
 import com.impuls.user_service.services.response.AuthResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,10 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -41,12 +37,11 @@ public class AuthServiceImplementation implements AuthService {
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
     @Autowired
-    private SocialNetworkRepository socialNetworkRepository;
+    CityRepository cityRepository;
     @Autowired
     private AddressRepository addressRepository;
 
-    private SocialNetworkService socialNetworkService;
-
+    @Autowired
     private AddressService addressService;
 
     @Override
@@ -57,7 +52,7 @@ public class AuthServiceImplementation implements AuthService {
             throw new Exception("El email ya existe");
         }
 
-        Role defaultRole = roleRepository.findByName(RoleName.ROLE_USUARIO);
+        Role defaultRole = roleRepository.findByName(RoleName.USUARIO);
 
         //Crea al usuario
 
@@ -119,33 +114,40 @@ public class AuthServiceImplementation implements AuthService {
         profileCreated.setPhone(profileRequest.getPhone());
         profileCreated.setAvatarUrl(profileRequest.getAvatarUrl());
         profileCreated.setUser(userCreated);
-        UserProfile savedProfile = userProfileRepository.save(profileCreated);
-        createSocialNetwork(savedProfile, profileRequest.getSocialNetworkRequests());
-        createAddress(savedProfile, profileRequest.getAddressRequests());
+        if(profileRequest.getSocialNetworkRequests()!=null){
+            createSocialNetwork(profileCreated, profileRequest.getSocialNetworkRequests());
+        }
+        if(profileRequest.getAddressRequests()!=null) {
+            createAddress(profileCreated, profileRequest.getAddressRequests());
+        }
+        userProfileRepository.save(profileCreated);
     }
 
     private void createSocialNetwork(UserProfile userProfile, List<SocialNetworkRequest> socialNetworkRequests){
-        Set<SocialNetwork> socialNetworks = new HashSet<>();
-        for(int i = 0; i<socialNetworkRequests.size();i++)
-        {
-            SocialNetworkRequest socialNetworkRequest =socialNetworkRequests.get(i);
-            SocialNetwork socialNetwork = socialNetworkService.createSocialNetwork(userProfile, socialNetworkRequest);
+        Set<SocialNetwork> socialNetworks = userProfile.getSocialNetworks();
+        for (SocialNetworkRequest socialNetworkRequest : socialNetworkRequests) {
+            SocialNetwork socialNetwork = new SocialNetwork();
+            socialNetwork.setName(socialNetworkRequest.getName());
+            socialNetwork.setUrl(socialNetworkRequest.getUrl());
+            socialNetwork.setUserProfile(userProfile); // Set the bidirectional relationship
             socialNetworks.add(socialNetwork);
         }
-        userProfile.setSocialNetworks(socialNetworks);
-        userProfileRepository.save(userProfile);
     }
 
     private void createAddress(UserProfile userProfile, List<AddressRequest> addressRequests){
-        Set<Address> addresses = new HashSet<>();
-        for(int i = 0; i<addressRequests.size();i++)
-        {
-            AddressRequest addressRequest =addressRequests.get(i);
-            Address address = addressService.createAddress(userProfile, addressRequest);
+        Set<Address> addresses = userProfile.getAddresses();
+        for (AddressRequest addressRequest : addressRequests) {
+            Address address = new Address();
+            address.setStreet(addressRequest.getStreet());
+            address.setNeighborhood(addressRequest.getNeighborhood());
+            address.setUserProfile(userProfile);
+            if (addressRequest.getCity()!=null) {
+                Optional<City> city = cityRepository.findById(addressRequest.getCity().getId());
+                city.ifPresent(address::setCity);
+            }
+            address.setIsPrimary(addressRequest.getIsPrimary());
             addresses.add(address);
         }
-        userProfile.setAddresses(addresses);
-        userProfileRepository.save(userProfile);
     }
 
     private Authentication authenticate(String username, String password) {

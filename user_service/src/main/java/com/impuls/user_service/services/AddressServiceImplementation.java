@@ -7,6 +7,7 @@ import com.impuls.user_service.model.gateway.AddressRepository;
 import com.impuls.user_service.model.gateway.CityRepository;
 import com.impuls.user_service.services.interfaces.AddressService;
 import com.impuls.user_service.services.request.AddressRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,9 +15,10 @@ import java.util.Optional;
 
 @Service
 public class AddressServiceImplementation implements AddressService {
-
+    @Autowired
     private CityRepository cityRepository;
 
+    @Autowired
     private AddressRepository addressRepository;
 
     @Override
@@ -25,8 +27,10 @@ public class AddressServiceImplementation implements AddressService {
         address.setStreet(addressRequest.getStreet());
         address.setNeighborhood(addressRequest.getNeighborhood());
         address.setUserProfile(userProfile);
-        Optional<City> city = cityRepository.findById(addressRequest.getCity().getId());
-        city.ifPresent(address::setCity);
+        if (addressRequest.getCity()!=null) {
+            Optional<City> city = cityRepository.findById(addressRequest.getCity().getId());
+            city.ifPresent(address::setCity);
+        }
         address.setIsPrimary(addressRequest.getIsPrimary());
         return addressRepository.save(address);
     }

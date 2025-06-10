@@ -1,4 +1,4 @@
-package com.impuls.user_service.config;
+package com.impuls.user_service.security;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
@@ -28,12 +28,12 @@ public class AppConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(Authorize -> Authorize
+                .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(ADMIN_PATH).hasAnyRole("ADMIN")
-                        .requestMatchers(USER_PATH).hasAnyRole("USER")
+                        .requestMatchers(USER_PATH).hasAnyRole("USUARIO")
                         .requestMatchers(PUBLIC_PATH).permitAll()
                         .requestMatchers(API_BASE + "/**").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 .addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)
                 .csrf(csrf->csrf.disable())

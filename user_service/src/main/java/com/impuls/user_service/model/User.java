@@ -20,9 +20,10 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(unique = true, updatable = false)
     private String userNumber;
     private String email;
-    @Column(name = "password_hash")
+    @Column(name = "password")
     @JsonProperty(access =  JsonProperty.Access.WRITE_ONLY)
     private String password;
     private boolean isVerified;
