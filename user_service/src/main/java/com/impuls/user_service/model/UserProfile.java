@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "user_profile")
 @Getter
@@ -35,12 +38,10 @@ public class UserProfile {
     @JoinColumn(name = "document_type_id")
     private DocumentType documentType ;
 
-    @OneToOne( fetch = FetchType.LAZY)
-    @JoinColumn(name = "social_network_id")
-    private SocialNetwork socialNetwork ;
+    @OneToMany(mappedBy = "userProfile", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<SocialNetwork> socialNetworks = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "address_id")
-    private Address address;
+    @OneToMany(mappedBy = "userProfile", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Address> addresses = new HashSet<>();
 
 }

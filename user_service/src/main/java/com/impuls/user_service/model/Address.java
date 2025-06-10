@@ -27,4 +27,8 @@ public class Address {
     private String neighborhood;
     private String zipCode;
     private Boolean isPrimary;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_profile_id")
+    private UserProfile userProfile;
 }
