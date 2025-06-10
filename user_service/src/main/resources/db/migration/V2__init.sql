@@ -1,0 +1,1 @@
+ALTER TABLE document_type ADD COLUMN code VARCHAR(255);

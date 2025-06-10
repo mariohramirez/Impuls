@@ -1,0 +1,22 @@
+package com.impuls.user_service.services.interfaces;
+
+import com.impuls.user_service.model.SocialNetwork;
+import com.impuls.user_service.model.UserProfile;
+import com.impuls.user_service.services.request.SocialNetworkRequest;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public interface SocialNetworkService {
+
+    public SocialNetwork createSocialNetwork(UserProfile userProfile, SocialNetworkRequest socialNetworkRequest);
+
+    public SocialNetwork updateSocialNetwork(Long id, SocialNetworkRequest socialNetworkRequest) throws Exception;
+
+    public void deleteSocialNetwork(Long id)throws Exception;
+
+    public List<SocialNetwork> getAllSocialNetworks();
+
+    public SocialNetwork  findSocialNetworkById(Long id) throws Exception;
+}
