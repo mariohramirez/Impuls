@@ -6,7 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Timestamp;
+
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -39,16 +40,16 @@ public class Entrepreneurship {
     private Boolean isVerified;
     private Boolean isActive;
 
-    private Timestamp createdAt;
-    private Timestamp updatedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "legal_form_id")
     private LegalForm legalForm;
 
-    private Timestamp registerDate;
-    private Timestamp startDate;
-    private Timestamp incorporationDate;
+    private LocalDateTime registerDate;
+    private LocalDateTime startDate;
+    private LocalDateTime incorporationDate;
     private Boolean formalized;
 
     @OneToMany(mappedBy = "entrepreneurship", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
