@@ -6,10 +6,7 @@ import com.impuls.business_service.services.request.EntrepreneurshipRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static com.impuls.business_service.controllers.ApiPaths.PUBLIC_PATH;
 
@@ -22,8 +19,9 @@ public class EntrepreneurshipController {
 
     @PostMapping("/register")
     public ResponseEntity<Entrepreneurship> createEntrepreneurshipHandler(
-            @RequestBody EntrepreneurshipRequest request) throws Exception{
-        Entrepreneurship entrepreneurship = entrepreneurshipService.createEntrepreneurship(request);
+            @RequestBody EntrepreneurshipRequest request,
+            @RequestHeader("Authorization") String token) throws Exception{
+        Entrepreneurship entrepreneurship = entrepreneurshipService.createEntrepreneurship(request, token);
         return new ResponseEntity<>(entrepreneurship, HttpStatus.CREATED);
     }
 

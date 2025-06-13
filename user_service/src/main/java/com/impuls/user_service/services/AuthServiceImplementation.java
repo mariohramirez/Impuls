@@ -38,11 +38,6 @@ public class AuthServiceImplementation implements AuthService {
     private CustomUserDetailsService customUserDetailsService;
     @Autowired
     CityRepository cityRepository;
-    @Autowired
-    private AddressRepository addressRepository;
-
-    @Autowired
-    private AddressService addressService;
 
     @Override
     public AuthResponse registerBaseUser

@@ -48,6 +48,7 @@ public class UserServiceImplementation implements UserService {
         profileResponse.setAvatarUrl(userProfile.getAvatarUrl());
 
         UserResponse userResponse = new UserResponse();
+        userResponse.setId(user.getId());
         userResponse.setEmail(user.getEmail());
         userResponse.setRole(user.getEmail());
         userResponse.setProfileResponse(profileResponse);
