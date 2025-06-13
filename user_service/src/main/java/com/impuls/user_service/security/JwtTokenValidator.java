@@ -49,7 +49,7 @@ public class JwtTokenValidator extends OncePerRequestFilter {
                         AuthorityUtils.commaSeparatedStringToAuthorityList(authorities)
                 );
 
-               //List<GrantedAuthority> auth = AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
+                //List<GrantedAuthority> auth = AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
                 //Authentication authentication = new UsernamePasswordAuthenticationToken(email, null, auth);
                 Authentication authentication = new UsernamePasswordAuthenticationToken(
                         principal,

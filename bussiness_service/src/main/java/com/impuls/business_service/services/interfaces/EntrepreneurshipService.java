@@ -9,7 +9,7 @@ import java.util.List;
 @Service
 public interface EntrepreneurshipService {
 
-    public Entrepreneurship createEntrepreneurship(EntrepreneurshipRequest request);
+    public Entrepreneurship createEntrepreneurship(EntrepreneurshipRequest request, String authToken);
 
     public Entrepreneurship updateEntrepreneurship(Long id, EntrepreneurshipRequest request) throws Exception;
 

@@ -1,5 +1,7 @@
 package com.impuls.business_service.services;
 
+import com.impuls.business_service.client.UserServiceClient;
+import com.impuls.business_service.client.response.UserResponse;
 import com.impuls.business_service.model.*;
 import com.impuls.business_service.model.gateway.CityRepository;
 import com.impuls.business_service.model.gateway.EntrepreneurshipRepository;
@@ -8,6 +10,7 @@ import com.impuls.business_service.services.request.AddressRequest;
 import com.impuls.business_service.services.request.EntrepreneurshipRequest;
 import com.impuls.business_service.services.request.SocialNetworkRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -21,8 +24,23 @@ public class EntrepreneurshipServiceImplementation implements EntrepreneurshipSe
     @Autowired
     CityRepository cityRepository;
 
+    @Autowired
+    private UserServiceClient userServiceClient;
+
     @Override
-    public Entrepreneurship createEntrepreneurship(EntrepreneurshipRequest request) {
+    public Entrepreneurship createEntrepreneurship(EntrepreneurshipRequest request, String authToken) {
+        // 1. Obtener el usuario autenticado desde user-service
+        ResponseEntity<UserResponse> userResponse = userServiceClient.getCurrentUser(authToken);
+        UserResponse user = userResponse.getBody();
+        System.out.println(user);
+        // 2. Validar que el usuario existe
+        if (user == null || user.getId() == null) {
+            throw new IllegalArgumentException("Usuario no válido o no autenticado");
+        }
+
+        // 3. Asignar el ownerId con el ID del usuario
+        request.setOwnerId(user.getId());
+
         return createAndSaveEntrepreneurship(request);
     }
 
