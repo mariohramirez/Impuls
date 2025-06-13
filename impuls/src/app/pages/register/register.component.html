@@ -1,0 +1,31 @@
+<!-- register.component.html -->
+<form (ngSubmit)="onSubmit()">
+  <h2>Registro de Usuario</h2>
+  
+  <div>
+    <label>Email:</label>
+    <input type="email" [(ngModel)]="userData.email" name="email" required>
+  </div>
+  
+  <div>
+    <label>Contraseña:</label>
+    <input type="password" [(ngModel)]="userData.password" name="password" required>
+  </div>
+  
+  <div>
+    <label>Nombre:</label>
+    <input type="text" [(ngModel)]="userData.profileRequest.firstName" name="firstName" required>
+  </div>
+  
+  <div>
+    <label>Apellido:</label>
+    <input type="text" [(ngModel)]="userData.profileRequest.lastName" name="lastName" required>
+  </div>
+  
+  <div>
+    <label>Teléfono:</label>
+    <input type="text" [(ngModel)]="userData.profileRequest.phone" name="phone" required>
+  </div>
+  
+  <button type="submit">Registrarse</button>
+</form>
