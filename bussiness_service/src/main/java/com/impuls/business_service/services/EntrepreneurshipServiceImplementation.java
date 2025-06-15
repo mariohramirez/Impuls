@@ -9,7 +9,10 @@ import com.impuls.business_service.services.interfaces.EntrepreneurshipService;
 import com.impuls.business_service.services.request.AddressRequest;
 import com.impuls.business_service.services.request.EntrepreneurshipRequest;
 import com.impuls.business_service.services.request.SocialNetworkRequest;
+import com.impuls.business_service.services.response.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
@@ -120,6 +123,114 @@ public class EntrepreneurshipServiceImplementation implements EntrepreneurshipSe
     public List<Entrepreneurship> getAllEntrepreneurship() {
         return null;
     }
+
+    @Override
+    public List<EntrepreneurshipResponse> getAllEntrepreneurshipResponse() {
+        List<Entrepreneurship> entrepreneurships = entrepreneurshipRepository.findAll();
+        List<EntrepreneurshipResponse> entrepreneurshipResponses = new ArrayList<>();
+        for(int i=0; i<entrepreneurships.size(); i++){
+            entrepreneurshipResponses.add(convertToDto(entrepreneurships.get(i)));
+        }
+        return entrepreneurshipResponses;
+    }
+
+    @Override
+    public Page<EntrepreneurshipResponse> search(String query, Pageable pageable) {
+        Page<Entrepreneurship> results = entrepreneurshipRepository.search(query, pageable);
+
+        return results.map (this::convertToDto);
+    }
+
+    @Override
+    public Page<EntrepreneurshipResponse> getAllEntrepreneurship(Pageable pageable) {
+
+        //Trae todos los datos
+        Page<Entrepreneurship> entrepreneurships = entrepreneurshipRepository.findAll(pageable);
+        return entrepreneurships.map(this::convertToDto);
+    }
+
+    @Override
+    public Page<EntrepreneurshipResponse> getByCategory(String categoryName, Pageable pageable) {
+        Page<Entrepreneurship> entrepreneurships = entrepreneurshipRepository
+                .findByCategoryName(categoryName, pageable);
+        return entrepreneurships.map(this::convertToDto);
+    }
+
+    @Override
+    public Page<EntrepreneurshipResponse> getByCountry(String countryName, Pageable pageable) {
+        Page<Entrepreneurship> entrepreneurships = entrepreneurshipRepository
+                .findByCountryName(countryName, pageable);
+        return entrepreneurships.map(this::convertToDto);
+    }
+
+    private EntrepreneurshipResponse convertToDto(Entrepreneurship entrepreneurship) {
+        EntrepreneurshipResponse response = new EntrepreneurshipResponse();
+
+        // Mapeo de campos básicos
+        response.setOwnerId(entrepreneurship.getOwnerId());
+        response.setName(entrepreneurship.getName());
+        response.setEmail(entrepreneurship.getEmail());
+        response.setPhone(entrepreneurship.getPhone());
+        response.setLogoUrl(entrepreneurship.getLogoUrl());
+        response.setWebsiteUrl(entrepreneurship.getWebsiteUrl());
+        response.setShortDescription(entrepreneurship.getShortDescription());
+        response.setBannerUrl(entrepreneurship.getBannerUrl());
+        response.setDescription(entrepreneurship.getDescription());
+
+        // Mapeo de direcciones
+        if (entrepreneurship.getAddresses() != null) {
+            List<AddressResponse> addressResponses = entrepreneurship.getAddresses().stream()
+                    .map(address -> {
+                        AddressResponse addrResponse = new AddressResponse();
+                        addrResponse.setStreet(address.getStreet());
+                        addrResponse.setNeighborhood(address.getNeighborhood());
+                        addrResponse.setZipCode(address.getZipCode());
+
+                        return addrResponse;
+                    }).toList();
+            response.setAddressResponses(addressResponses); // Usar setAddressResponses (no Requests)
+        }
+
+        // Mapeo de redes sociales
+        if (entrepreneurship.getSocialNetworks() != null) {
+            List<SocialNetworkResponse> socialNetworkResponses = entrepreneurship.getSocialNetworks().stream()
+                    .map(socialNetwork -> {
+                        SocialNetworkResponse snResponse = new SocialNetworkResponse();
+                        snResponse.setName(socialNetwork.getName());
+                        snResponse.setUrl(socialNetwork.getUrl());
+                        return snResponse;
+                    }).toList();
+            response.setSocialNetworkResponses(socialNetworkResponses);
+        }
+
+        // Mapeo de categorías
+        if (entrepreneurship.getCategories() != null) {
+            List<CategoryResponse> categoryResponses = entrepreneurship.getCategories().stream()
+                    .map(category -> {
+                        CategoryResponse catResponse = new CategoryResponse();
+                        catResponse.setName(category.getCategory().getName());
+                        catResponse.setDescription(category.getCategory().getDescription());
+                        catResponse.setIcon(category.getCategory().getIcon());
+                        return catResponse;
+                    }).toList();
+            response.setCategoryResponses(categoryResponses);
+        }
+
+        // Mapeo de servicios
+        if (entrepreneurship.getServices() != null) {
+            List<ServiceResponse> serviceResponses = entrepreneurship.getServices().stream()
+                    .map(service -> {
+                        ServiceResponse svcResponse = new ServiceResponse();
+                        svcResponse.setName(service.getService().getName());
+                        svcResponse.setDescription(service.getService().getDescription());
+                        return svcResponse;
+                    }).toList();
+            response.setServiceResponses(serviceResponses);
+        }
+
+        return response;
+    }
+
 
     @Override
     public Entrepreneurship findEntrepreneurshipById(Long entrepreneurshipId) throws Exception {
