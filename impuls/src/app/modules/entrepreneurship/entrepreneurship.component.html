@@ -1,2 +1,4 @@
-<app-search></app-search>
-<app-directories-display></app-directories-display>
+<div class="container mx-auto">
+  <app-search (search)="directoriesDisplay.onSearch($event)"></app-search>
+  <app-directories-display #directoriesDisplay></app-directories-display>
+</div>

@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table(name = "cities")
 @Setter
@@ -20,7 +22,10 @@ public class City {
 
     private String name;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "state_id")
     private State state;
+
+    @OneToMany(mappedBy = "city", fetch = FetchType.LAZY)
+    private List<Address> addresses;
 }

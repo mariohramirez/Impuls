@@ -1,23 +1,20 @@
 <div class="mx-auto px-4 py-16 sm:px-6 lg:px-8 bg-lightGreen relative lg:pb-32">
-  <!-- Header Section -->
-  <div class="text-center mb-16">
-    <div class="text-primary text-sm mb-4">BLOG AND NEWS</div>
-    <h2 class="text-darkBlue text-4xl mx-auto font-redhat font-bold my-4">
-      Better Digital Insurance Begins
-      <br />
-      Right Here
-    </h2>
-  </div>
-
-  <!-- Blog Grid -->
+  <!-- Grid de emprendimientos -->
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-    <!-- Blog Card 1 -->
-    <app-entrepreneurship-card></app-entrepreneurship-card>
-    <app-entrepreneurship-card></app-entrepreneurship-card>
-    <app-entrepreneurship-card></app-entrepreneurship-card>
-    <app-entrepreneurship-card></app-entrepreneurship-card>
-    <app-entrepreneurship-card></app-entrepreneurship-card>
-    <app-entrepreneurship-card></app-entrepreneurship-card>
-    <app-entrepreneurship-card></app-entrepreneurship-card>
+    @if (isLoading()) {
+      <!-- Loading state -->
+      @for (i of [1,2,3,4,5,6,7,8]; track i) {
+        <div class="animate-pulse bg-gray-200 h-80 rounded"></div>
+      }
+    } @else {
+      <!-- Contenido real -->
+      @for (item of entrepreneurships(); track item.id) {
+        <app-entrepreneurship-card [entrepreneurship]="item" />
+      } @empty {
+        <div class="col-span-full text-center py-12">
+          <p class="text-gray-500">No se encontraron emprendimientos</p>
+        </div>
+      }
+    }
   </div>
 </div>

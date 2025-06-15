@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table(name = "countries")
 @Setter
@@ -23,5 +25,8 @@ public class Country {
     private String code;
 
     private String phoneCode;
+
+    @OneToMany(mappedBy = "country", fetch = FetchType.LAZY)
+    private List<State> states;
 
 }
