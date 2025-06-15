@@ -1,0 +1,26 @@
+<header
+  class="flex justify-between items-center m-2 md:m-4 font-redhat relative z-50"
+>
+  <div>
+    <h2 class="text-primary text-3xl font-black ml-4 font-redhat">Impuls</h2>
+  </div>
+  <!--Links de navegacion-->
+  <div class="hidden md:block font-semibold">
+    <app-navlinks></app-navlinks>
+  </div>
+
+  <!-- Perfil del usuario (solo visible cuando está logueado) -->
+  <div class="hidden md:block font-semibold" *ngIf="userService.isAuthenticated()">
+    <app-profile-menu></app-profile-menu>
+  </div>
+
+  <div class="hidden lg:block">
+    <button (click)="goToSignUpPage()"
+      class="h-11 w-35 bg-secondary text-primary flex justify-center items-center rounded-sm text-sm hover:bg-primary hover:text-secondary cursor-pointer"
+    >
+      <span class="pr-2"> </span>
+            {{ userService.isAuthenticated() ? 'Agregar emprendimiento' : 'Registrarme' }}
+
+    </button>
+  </div>
+</header>

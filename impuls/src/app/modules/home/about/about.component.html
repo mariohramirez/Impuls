@@ -1,0 +1,48 @@
+<!-- Seccion acerca de -->
+<section class="py-12 px-6 mt-12">
+  <div class="mx-auto px-4">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+      <!-- Cartas de informacion -->
+      <div class="space-y-6">
+        <div class="text-left mb-12">
+          <h3 class="text-sm text-primary uppercase font-semibold">
+            Acerca de Impuls
+          </h3>
+          <h2
+            class="text-darkBlue text-3xl md:text-4xl md:leading-[50px] font-redhat font-bold mt-2 mb-10"
+          >
+            Conectar a emprendedores, dar a conocer emprendimientos, crecer
+            juntos
+          </h2>
+        </div>
+        @for (aboutCard of about; track aboutCard.title) {
+        <app-about-card
+          [title]="aboutCard.title"
+          [description]="aboutCard.description"
+        />
+
+        }
+      </div>
+      <!-- Seccion de imagenes -->
+      <div class="w-full lg:w-3/4 mx-auto mt-8 lg:mt-0">
+        <div class="grid grid-cols-2 gap-4">
+          <img
+            src="/about/image-2.jpg"
+            alt="Image"
+            class="rounded-lg shadow-lg w-full h-full object-cover transform transition duration-300 hover:scale-105"
+          />
+          <img
+            src="/about/image-1.jpg"
+            alt="Image"
+            class="rounded-lg shadow-lg w-full h-full object-cover row-span-2 transform transition duration-300 hover:scale-105"
+          />
+          <img
+            src="/about/image-4.jpg"
+            alt="Image"
+            class="rounded-lg shadow-lg w-full h-full object-cover transform transition duration-300 hover:scale-105"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

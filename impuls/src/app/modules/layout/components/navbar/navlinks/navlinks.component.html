@@ -1,0 +1,41 @@
+<nav class="bg-white md:bg-transparent">
+  <div class="container mx-auto">
+    <ul class="flex space-x-8">
+      <!-- Inicio-->
+      <li class="relative group py-2">
+        <button (click)="goToHomePage()"
+          class="flex items-center text-gray-700 hover:text-blue cursor-pointer"
+        >
+          <span>Inicio</span>
+        </button>
+      </li>
+
+      <!-- Directorio -->
+      <li class="relative group py-2">
+        <button (click)="goToEntrepreneurshipPage()"
+          class="flex items-center text-gray-700 hover:text-blue cursor-pointer"
+        >
+          <span>Directorio</span>
+        </button>
+      </li>
+
+      <!-- Noticias -->
+      <li class="relative group py-2">
+        <button (click)="goToNewsPage()"
+          class="flex items-center text-gray-700 hover:text-blue cursor-pointer"
+        >
+          <span>Noticias</span>
+        </button>
+      </li>
+
+      <!-- Eventos -->
+      <li class="relative group py-2">
+        <button (click)="goToEventsPage()"
+          class="flex items-center text-gray-700 hover:text-blue cursor-pointer"
+        >
+          <span>Eventos</span>
+        </button>
+      </li>
+    </ul>
+  </div>
+</nav>
