@@ -24,6 +24,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> createUserHandler(
             @RequestBody RegisterRequest registerRequest) throws Exception{
+        System.out.println("ACAAAAA"+registerRequest);
         AuthResponse response = authService.registerBaseUser(registerRequest);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
